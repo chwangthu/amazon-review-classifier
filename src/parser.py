@@ -1,9 +1,30 @@
+import re
 import numpy as np
 import pandas as pd
-from sklearn import svm
+from string import punctuation
+from nltk.corpus import stopwords, wordnet
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer, PorterStemmer
+from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
+from string import punctuation
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from gensim.models.word2vec import Word2Vec
+
+def preprocess(text):
+    text = text.lower()
+    # remove numbers, punctuations
+    text = re.sub(r'\d+', '', text)
+    text = text.translate(str.maketrans("", "", punctuation))
+    tokens = word_tokenize(text)
+    tokens = [i for i in tokens if not i in ENGLISH_STOP_WORDS]
+
+    # stem and lemmatization
+    lemmatizer=WordNetLemmatizer()
+    stemmer= PorterStemmer()
+    tokens = [lemmatizer.lemmatize(i) for i in tokens]
+    tokens = [stemmer.stem(i) for i in tokens]
+    return " ".join(tokens)
 
 def read_data(test_size=10000):
     train_df = pd.read_csv("../data/train.csv", sep='\t')
@@ -13,9 +34,9 @@ def read_data(test_size=10000):
     y = []
     if test_size > row:
         test_size = row
-    for i in range(row):
-        x.append(train_df.iloc[i, 2])
-        y.append(train_df.iloc[i, 6])
+    # x = list(train_df['reviewText'][:test_size])
+    x = list(pd.read_csv("../data/processed.csv", sep='\t')['reviewText'][:test_size])
+    y = list(train_df['label'][:test_size])
     return x, y
 
 def get_test_data():
@@ -23,7 +44,7 @@ def get_test_data():
     return test_df['reviewText'], test_df['reviewerID'], test_df['overall'], test_df['Id']
 
 def get_word_count(corpus, test, write_file=False):
-    vectorizer = CountVectorizer(stop_words="english", max_features=5000)
+    vectorizer = CountVectorizer(stop_words="english")
     X = vectorizer.fit_transform(corpus).toarray()
     X_test = vectorizer.transform(test).toarray()
     names = vectorizer.get_feature_names()
@@ -35,7 +56,7 @@ def get_word_count(corpus, test, write_file=False):
     return X, X_test
 
 if __name__ == "__main__":
-    x, y = read_data()
+    x, y = read_data(10)
     # x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=33)
     vectorizer = CountVectorizer()
     corpus = [
