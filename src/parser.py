@@ -26,29 +26,34 @@ def preprocess(text):
     tokens = [stemmer.stem(i) for i in tokens]
     return " ".join(tokens)
 
-def read_data(test_size=10000):
+def read_data(train_size=10000):
     train_df = pd.read_csv("../data/train.csv", sep='\t')
     row, column = train_df.shape
     print("size =", row, column)
     x = []
     y = []
-    if test_size > row:
-        test_size = row
+    if str(train_size) == "ALL":
+        train_size = row
+    elif train_size > row:
+        train_size = row
     # x = list(train_df['reviewText'][:test_size])
-    x = list(pd.read_csv("../data/processed.csv", sep='\t')['reviewText'][:test_size])
-    y = list(train_df['label'][:test_size])
-    return x, y
+    x = list(pd.read_csv("../data/processed.csv", sep='\t')['reviewText'][:train_size])
+    y = list(train_df['label'][:train_size])
+    return x, y, list(train_df['overall'])[:train_size], list(train_df['reviewerID'])[:train_size], list(train_df['asin'])[:train_size] 
 
 def get_test_data():
     test_df = pd.read_csv("../data/test.csv", sep='\t')
-    return test_df['reviewText'], test_df['reviewerID'], test_df['overall'], test_df['Id']
+    x_test = list(pd.read_csv("../data/test_process.csv", sep="\t")['reviewText']) 
+    # x_test = test_df['test.csv']
+    return x_test, test_df['reviewerID'], test_df['overall'], test_df['Id'], test_df['asin']
 
 def get_word_count(corpus, test, write_file=False):
-    vectorizer = CountVectorizer(stop_words="english")
+    vectorizer = CountVectorizer(stop_words="english", max_features=10000)
     X = vectorizer.fit_transform(corpus).toarray()
     X_test = vectorizer.transform(test).toarray()
     names = vectorizer.get_feature_names()
     row, column = X.shape
+    print(X.shape)
     if write_file:
         count_list = np.sum(X, axis=0)
         data_df = pd.DataFrame({'word': names, 'count': count_list})

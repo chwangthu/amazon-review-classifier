@@ -17,7 +17,7 @@ def bootstrap_sampling(x_train, y_train):
 def bagging(x_train, y_train, x_test, classifier="NB", rounds=11):
     y_test = np.zeros(len(x_test), dtype=int)
     for i in range(rounds):
-        print("\r Round: %d/%d" %(i, rounds), end="")
+        print("\r Round: %d/%d" %(i+1, rounds), end="")
         # create bootstrap sample set
         x_bs_train, y_bs_train = bootstrap_sampling(x_train, y_train)
         if classifier == "NB":
