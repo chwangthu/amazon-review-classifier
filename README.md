@@ -12,3 +12,6 @@ Using Ensemble Learning to select high quality Amazon reviews.
 - label: 0 for low quality, and 1 for high quality (only appear in training set)
 
 Reviews with votes_up / votes_all ≥ 0.9 are considered as high quality reviews. All the reviews are assured to have at least 5 votes_all.
+
+## Ensemble learning
+Bagging and Adaboost M1 is used.

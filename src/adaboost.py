@@ -10,10 +10,10 @@ from sklearn.metrics import roc_auc_score
 
 def adaboost(x_train, y_train, x_test, classifier="DTREE", T=11):
     x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2)
-    N = len(x_train)
+    N = x_train.shape[0]
     print("Train size: ", N)
-    y_val_pred = np.zeros(len(x_val))
-    y_pred = np.zeros(len(x_test))
+    y_val_pred = np.zeros(x_val.shape[0])
+    y_pred = np.zeros(x_test.shape[0])
     beta_list = []
     clf_list = []
     weight = np.ones(N)*1/N
@@ -52,11 +52,10 @@ def adaboost(x_train, y_train, x_test, classifier="DTREE", T=11):
         # y_pred += np.array(clf.predict_proba(x_test))[:,1] * beta 
         # y_val_pred += np.array(clf.predict_proba(x_val))[:,1] * beta 
     
+    print("Train finished, predict the result...")
     beta_list = np.array(beta_list)/np.sum(beta_list)
     for i in range(len(beta_list)):
         y_pred += np.array(clf_list[i].predict_proba(x_test))[:,1] * beta_list[i]
         y_val_pred += np.array(clf_list[i].predict_proba(x_val))[:,1] * beta_list[i] 
-    print(len(y_val), y_val)
-    print(len(y_val_pred), y_val_pred)
     print("Auc score in val set: ", roc_auc_score(y_val, y_val_pred))
     return y_pred
