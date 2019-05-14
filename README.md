@@ -15,3 +15,7 @@ Reviews with votes_up / votes_all ≥ 0.9 are considered as high quality reviews
 
 ## Ensemble learning
 Bagging and Adaboost M1 is used.
+- `adaboost.py`: Adaboost M1
+- `bagging.py`: bagging
+- `vec.py`: word2vec
+The accuracy reaches 80%.

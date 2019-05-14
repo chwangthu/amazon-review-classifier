@@ -2,3 +2,8 @@ data/
 result/
 *.DS_Store
 *.pyc
+__pycache__/
+*.aux
+*.log
+*.out
+*.synctex.gz

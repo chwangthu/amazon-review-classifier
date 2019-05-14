@@ -32,14 +32,12 @@ def read_data():
     print("size =", row, column)
     x = []
     y = []
-    # x = pd.read_csv("../data/processed.csv", sep='\t')['reviewText']
     x = train_df['reviewText']
     y = train_df['label']
     return x, y, train_df['overall'], train_df['reviewerID'], train_df['asin']
 
 def get_test_data():
     test_df = pd.read_csv("../data/test.csv", sep='\t')
-    # x_test = pd.read_csv("../data/test_process.csv", sep="\t")['reviewText']
     x_test = test_df['reviewText']
     return x_test, test_df['reviewerID'], test_df['overall'], test_df['Id'], test_df['asin']
 

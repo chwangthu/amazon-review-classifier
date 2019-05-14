@@ -9,10 +9,11 @@ from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import roc_auc_score
 
 def adaboost(x_train, y_train, x_test, classifier="DTREE", T=11):
-    x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2)
+    # x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.1)
     N = x_train.shape[0]
     print("Train size: ", N)
-    y_val_pred = np.zeros(x_val.shape[0])
+    print("Number of iterations: ", T)
+    # y_val_pred = np.zeros(x_val.shape[0])
     y_pred = np.zeros(x_test.shape[0])
     beta_list = []
     clf_list = []
@@ -49,13 +50,12 @@ def adaboost(x_train, y_train, x_test, classifier="DTREE", T=11):
         beta = log(1/beta)
         beta_list.append(beta)
         clf_list.append(clf)
-        # y_pred += np.array(clf.predict_proba(x_test))[:,1] * beta 
-        # y_val_pred += np.array(clf.predict_proba(x_val))[:,1] * beta 
+ 
     
-    print("Train finished, predict the result...")
+    # print("Train finished, predict the result...")
     beta_list = np.array(beta_list)/np.sum(beta_list)
     for i in range(len(beta_list)):
         y_pred += np.array(clf_list[i].predict_proba(x_test))[:,1] * beta_list[i]
-        y_val_pred += np.array(clf_list[i].predict_proba(x_val))[:,1] * beta_list[i] 
-    print("Auc score in val set: ", roc_auc_score(y_val, y_val_pred))
+        # y_val_pred += np.array(clf_list[i].predict_proba(x_val))[:,1] * beta_list[i] 
+    # print("Auc score in val set: ", roc_auc_score(y_val, y_val_pred))
     return y_pred
