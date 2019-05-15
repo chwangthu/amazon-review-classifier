@@ -36,7 +36,8 @@ def adaboost(x_train, y_train, x_test, classifier="DTREE", T=11):
                 error_weight += weight[i]
         if error_weight > 0.5:
             print("Too many errors, abort loop!")
-            error_weight = 0.48
+            break
+            # error_weight = 0.48
             # continue
         # avoid error_weight to be 0
         error_weight += 0.000001

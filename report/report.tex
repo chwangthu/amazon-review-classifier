@@ -192,6 +192,7 @@ Futher, I got the result of the four combinations and changed the number of iter
     \label{nb}
     \caption{Bagging and Adaboost for NB}
 \end{figure}
+Note that in the above test, Adaboost doesn't abort loop when error rate exceeds 0.5. I just tried to make it to run the full rounds. In fact, adaboost will stop at the fourth round for SVM and maintains accuracy around 79\%, second round for NB. And it will not stop for DTree. 
 
 For precise value, please refer to result.xlsx.
 
